@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <div class="logo">
+                <h1>Weather App</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#" class="active" data-page="dashboard">Dashboard</a></li>
+                    <li><a href="#" data-page="tables">Tables</a></li>
+                </ul>
+            </nav>
+        </aside>
+        <main>
+            <div class="search-bar">
+                <input type="text" id="cityInput" placeholder="Enter city name">
+                <button id="searchBtn">Get Weather</button>
+            </div>
+            <div class="unit-toggle">
+                <label for="unit-toggle">Show in Fahrenheit</label>
+                <input type="checkbox" id="unit-toggle">
+            </div>
+            <div id="loading-spinner" style="display:none;">
+                <img src="spinner.gif" alt="Loading...">
+            </div>
+            <div id="error" class="error"></div>
+            <div id="weatherWidget" class="weather-widget"></div>
+            <div class="charts-container">
+                <div class="chart">
+                    <canvas id="temperatureChart"></canvas>
+                </div>
+                <div class="chart">
+                    <canvas id="conditionsChart"></canvas>
+                </div>
+                <div class="chart">
+                    <canvas id="temperatureTrendChart"></canvas>
+                </div>
+            </div>
+            <div id="forecastTable" class="tab-content active"></div>
+            
+            <!-- Chatbot Section -->
+            <div id="chatbot">
+                <div id="chatMessages" class="chat-messages"></div>
+                <div class="chat-input">
+                    <input type="text" id="chatInput" placeholder="Ask about weather or anything else...">
+                    <button id="sendChatBtn">Send</button>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
