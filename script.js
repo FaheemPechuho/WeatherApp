@@ -1,5 +1,8 @@
 const OPENWEATHER_API_KEY = '1b4f5be9e5ac8a3cfc91d0b819e0ff45'; // Replace with your actual API key
 let isCelsius = true; // Unit toggle state
+let forecastData = []; // This will hold the fetched forecast data
+let currentPage = 1; // Initialize current page for pagination
+const itemsPerPage = 5; // Number of entries to show per page
 
 const cityInput = document.getElementById('cityInput');
 const searchBtn = document.getElementById('searchBtn');
@@ -11,6 +14,69 @@ const chatInput = document.getElementById('chatInput');
 const sendChatBtn = document.getElementById('sendChatBtn');
 const unitToggle = document.getElementById('unit-toggle');
 const loadingSpinner = document.getElementById('loading-spinner');
+
+// Chart initialization
+const ctx1 = document.getElementById('temperatureChart').getContext('2d');
+const ctx2 = document.getElementById('conditionsChart').getContext('2d');
+const ctx3 = document.getElementById('temperatureTrendChart').getContext('2d');
+
+let tempBarChart = new Chart(ctx1, {
+    type: 'bar',
+    data: {
+        labels: [],
+        datasets: [{
+            label: 'Temperature (°C)',
+            data: [],
+            backgroundColor: 'rgba(0, 128, 255, 0.7)', // Light blue
+        }],
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+
+let weatherDoughnutChart = new Chart(ctx2, {
+    type: 'doughnut',
+    data: {
+        labels: ['Clear', 'Clouds', 'Rain', 'Other'],
+        datasets: [{
+            data: [0, 0, 0, 0],
+            backgroundColor: ['#FFCE56', '#36A2EB', '#FF6384', '#4BC0C0'],
+        }],
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+    }
+});
+
+let tempLineChart = new Chart(ctx3, {
+    type: 'line',
+    data: {
+        labels: [],
+        datasets: [{
+            label: 'Temperature Changes',
+            data: [],
+            borderColor: '#007BFF', // Blue
+            fill: false,
+        }],
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
 
 // Event listeners
 searchBtn.addEventListener('click', () => handleSearch(fetchWeatherByCity));
@@ -66,9 +132,10 @@ async function fetchForecast(lat, lon) {
     const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${OPENWEATHER_API_KEY}&units=metric`;
 
     try {
-        const forecastData = await fetchData(forecastUrl);
+        forecastData = await fetchData(forecastUrl); // Store the fetched forecast data
         displayForecast(forecastData);
         createCharts(forecastData);
+        updatePagination(); // Update pagination controls after fetching data
     } catch (error) {
         console.error('Error fetching forecast:', error);
     }
@@ -91,6 +158,15 @@ function displayWeather(data) {
 // Display 5-day forecast
 function displayForecast(forecastData) {
     const dailyData = forecastData.list.filter((item, index) => index % 8 === 0);
+    renderForecastTable(dailyData);
+}
+
+// Render the forecast table with pagination
+function renderForecastTable(dailyData) {
+    const start = (currentPage - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+    const paginatedData = dailyData.slice(start, end);
+
     let tableHTML = `
         <table>
             <thead>
@@ -102,7 +178,8 @@ function displayForecast(forecastData) {
             </thead>
             <tbody>
     `;
-    dailyData.forEach(item => {
+
+    paginatedData.forEach(item => {
         const temp = formatTemperature(item.main.temp);
         tableHTML += `
             <tr>
@@ -112,8 +189,36 @@ function displayForecast(forecastData) {
             </tr>
         `;
     });
+
     tableHTML += '</tbody></table>';
     forecastTable.innerHTML = tableHTML;
+}
+
+// Update pagination controls
+function updatePagination() {
+    const totalPages = Math.ceil(forecastData.list.filter((item, index) => index % 8 === 0).length / itemsPerPage);
+    document.getElementById('currentPage').textContent = currentPage;
+
+    document.getElementById('prevPageBtn').disabled = currentPage === 1;
+    document.getElementById('nextPageBtn').disabled = currentPage === totalPages;
+
+    // Add event listeners for pagination buttons
+    document.getElementById('prevPageBtn').onclick = () => {
+        if (currentPage > 1) {
+            currentPage--;
+            renderForecastTable(forecastData.list.filter((item, index) => index % 8 === 0));
+            updatePagination();
+        }
+    };
+
+    document.getElementById('nextPageBtn').onclick = () => {
+        const totalPages = Math.ceil(forecastData.list.filter((item, index) => index % 8 === 0).length / itemsPerPage);
+        if (currentPage < totalPages) {
+            currentPage++;
+            renderForecastTable(forecastData.list.filter((item, index) => index % 8 === 0));
+            updatePagination();
+        }
+    };
 }
 
 // Create charts
@@ -128,97 +233,25 @@ function createCharts(forecastData) {
         weatherConditions.filter(c => c === condition).length
     );
 
-    renderChart('temperatureChart', 'bar', labels, temperatures, 'Temperature (°C)', '5-Day Temperature Forecast');
-    renderDoughnutChart('conditionsChart', uniqueConditions, conditionCounts, 'Weather Conditions Distribution');
-    renderLineChart('temperatureTrendChart', labels, temperatures, 'Temperature Trend');
-}
+    // Update Temperature Bar Chart
+    tempBarChart.data.labels = labels;
+    tempBarChart.data.datasets[0].data = temperatures;
+    tempBarChart.update();
 
-// Generic function to render charts
-function renderChart(chartId, chartType, labels, data, label, titleText) {
-    new Chart(document.getElementById(chartId), {
-        type: chartType,
-        data: {
-            labels,
-            datasets: [{
-                label,
-                data,
-                backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                borderColor: 'rgba(54, 162, 235, 1)',
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                title: {
-                    display: true,
-                    text: titleText
-                }
-            },
-            animation: {
-                delay: (context) => context.dataIndex * 300
-            }
-        }
-    });
-}
+    // Update Weather Conditions Doughnut Chart
+    const weatherCounts = {
+        Clear: weatherConditions.filter(w => w === 'Clear').length,
+        Clouds: weatherConditions.filter(w => w === 'Clouds').length,
+        Rain: weatherConditions.filter(w => w === 'Rain').length,
+        Other: weatherConditions.filter(w => !['Clear', 'Clouds', 'Rain'].includes(w)).length
+    };
+    weatherDoughnutChart.data.datasets[0].data = Object.values(weatherCounts);
+    weatherDoughnutChart.update();
 
-function renderDoughnutChart(chartId, labels, data, titleText) {
-    new Chart(document.getElementById(chartId), {
-        type: 'doughnut',
-        data: {
-            labels,
-            datasets: [{
-                data,
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.5)',
-                    'rgba(54, 162, 235, 0.5)',
-                    'rgba(255, 206, 86, 0.5)',
-                    'rgba(75, 192, 192, 0.5)',
-                    'rgba(153, 102, 255, 0.5)',
-                ],
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                title: {
-                    display: true,
-                    text: titleText
-                }
-            },
-            animation: {
-                delay: (context) => context.dataIndex * 300
-            }
-        }
-    });
-}
-
-function renderLineChart(chartId, labels, data, titleText) {
-    new Chart(document.getElementById(chartId), {
-        type: 'line',
-        data: {
-            labels,
-            datasets: [{
-                label: titleText,
-                data,
-                fill: false,
-                borderColor: 'rgb(75, 192, 192)',
-                tension: 0.1
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                title: {
-                    display: true,
-                    text: titleText
-                }
-            },
-            animation: {
-                duration: 2000,
-                easing: 'easeOutBounce'
-            }
-        }
-    });
+    // Update Temperature Line Chart
+    tempLineChart.data.labels = labels;
+    tempLineChart.data.datasets[0].data = temperatures;
+    tempLineChart.update();
 }
 
 // Handle chat submission
@@ -245,7 +278,7 @@ async function handleChatSubmit() {
 // Generate weather response
 function generateWeatherResponse() {
     if (!weatherData) return "I'm sorry, I don't have any weather data at the moment.";
-    
+
     const { main, weather } = weatherData;
     return `The current weather in ${weatherData.name} is ${weather[0].description} with a temperature of ${main.temp.toFixed(1)}°C.`;
 }

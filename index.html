@@ -15,8 +15,8 @@
             </div>
             <nav>
                 <ul>
-                    <li><a href="#" class="active" data-page="dashboard">Dashboard</a></li>
-                    <li><a href="#" data-page="tables">Tables</a></li>
+                    <li><a href="index.html" class="active" data-page="dashboard">Dashboard</a></li>
+                    <li><a href="table.html" data-page="table">Tables</a></li>
                 </ul>
             </nav>
         </aside>
@@ -45,8 +45,13 @@
                     <canvas id="temperatureTrendChart"></canvas>
                 </div>
             </div>
-            <div id="forecastTable" class="tab-content active"></div>
-            
+
+            <!-- 5-Day Forecast Table -->
+            <div id="forecastTableContainer">
+                <h3>5-Day Temperature Forecast</h3>
+                <div id="forecastTable" class="tab-content active"></div>
+            </div>
+
             <!-- Chatbot Section -->
             <div id="chatbot">
                 <div id="chatMessages" class="chat-messages"></div>

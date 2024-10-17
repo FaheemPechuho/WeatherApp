@@ -194,6 +194,48 @@ table td {
     border-bottom: 1px solid #ddd;
 }
 
+/* Forecast table styling */
+#forecastTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px; /* Add margin above the table */
+}
+
+#forecastTable th,
+#forecastTable td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Pagination controls styling */
+.pagination-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.pagination-controls button {
+    padding: 5px 10px;
+    margin: 0 5px;
+    cursor: pointer;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.pagination-controls button:hover {
+    background-color: #45a049; /* Darker green on hover */
+}
+
+#currentPage {
+    margin: 0 10px; /* Space between buttons */
+}
+
+
 /* Chat messages styling */
 .chat-messages {
     height: 300px;
