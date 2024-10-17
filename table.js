@@ -161,6 +161,7 @@ async function handleChatSubmit() {
     chatInput.value = '';
 
     try {
+        // Check if the message includes weather-related keywords
         if (message.toLowerCase().includes('weather') || message.toLowerCase().includes('temperature')) {
             const city = extractCityFromMessage(message);
             if (city) {
@@ -170,6 +171,7 @@ async function handleChatSubmit() {
                 appendMessage('assistant', "I couldn't determine which city you're asking about. Please specify a city name.");
             }
         } else {
+            // Send any other query to Gemini API
             const response = await fetchGeminiResponse(message);
             appendMessage('assistant', response);
         }
@@ -178,19 +180,25 @@ async function handleChatSubmit() {
     }
 }
 
+
 async function getChatWeatherResponse(city) {
     try {
         const weatherData = await fetchCurrentWeather(city);
         const currentTemp = weatherData.main.temp;
         const description = weatherData.weather[0].description;
+        const humidity = weatherData.main.humidity; // Get humidity
+        const windSpeed = weatherData.wind.speed; // Get wind speed
 
         return `Current weather in ${weatherData.name}:
 • Temperature: ${Math.round(currentTemp)}°C
-• Conditions: ${description}`;
+• Conditions: ${description}
+• Humidity: ${humidity}%
+• Wind Speed: ${windSpeed} m/s`;
     } catch (error) {
         return `I'm sorry, I couldn't find weather information for ${city}. Please check the city name and try again.`;
     }
 }
+
 
 function extractCityFromMessage(message) {
     const matches = message.match(/weather(?:\s+in)?\s+([a-zA-Z\s]+)|(?:what's|what is|how's|how is)\s+the\s+weather\s+(?:like\s+)?(?:in\s+)?([a-zA-Z\s]+)/i);
