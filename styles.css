@@ -12,7 +12,7 @@ body {
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
-    color: #2c3e50;
+    color: #000000; /* Update 1: Darker body color */
 }
 
 /* Main container for layout */
@@ -24,11 +24,12 @@ body {
 /* Sidebar styling */
 .sidebar {
     width: 250px;
-    background: rgba(58, 28, 113, 0.7);
-    backdrop-filter: blur(10px);
+    background: rgba(58, 28, 113, 0.85);
+    backdrop-filter: blur(5px);
     color: #fff;
     padding: 20px;
     position: relative;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
 }
 
 .logo h1 {
@@ -66,8 +67,8 @@ main {
     flex: 1;
     padding: 20px;
     overflow-y: auto;
-    background-color: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
+    background-color: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(5px);
 }
 
 /* Search bar styling */
@@ -82,8 +83,7 @@ main {
     font-size: 16px;
     border: none;
     border-radius: 25px 0 0 25px;
-    background-color: rgba(240, 244, 248, 0.8);
-    backdrop-filter: blur(5px);
+    background-color: rgba(255, 255, 255, 0.9);
     transition: all 0.3s ease;
 }
 
@@ -95,8 +95,7 @@ main {
 .search-bar button {
     padding: 12px 24px;
     font-size: 16px;
-    background-color: rgba(52, 152, 219, 0.8);
-    backdrop-filter: blur(5px);
+    background-color: rgba(52, 152, 219, 0.9);
     color: white;
     border: none;
     border-radius: 0 25px 25px 0;
@@ -105,7 +104,7 @@ main {
 }
 
 .search-bar button:hover {
-    background-color: rgba(41, 128, 185, 0.9);
+    background-color: rgba(41, 128, 185, 1);
 }
 
 /* Unit toggle styling */
@@ -132,24 +131,23 @@ main {
     margin-bottom: 15px;
     padding: 10px;
     border-radius: 5px;
-    background-color: rgba(250, 219, 216, 0.8);
-    backdrop-filter: blur(5px);
+    background-color: rgba(250, 219, 216, 0.9);
 }
 
 /* Weather widget styling */
 .weather-widget {
-    background-color: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(10px);
+    background-color: rgba(255, 255, 255, 0.8); /* Update 3: Increased opacity */
+    backdrop-filter: blur(5px);
     border-radius: 10px;
     padding: 20px;
     margin-bottom: 20px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
 }
 
 .weather-widget:hover {
     transform: translateY(-5px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 }
 
 /* Charts container styling */
@@ -164,17 +162,17 @@ main {
 .chart {
     flex: 1 1 calc(33.333% - 20px);
     min-width: 300px;
-    background-color: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(10px);
+    background-color: rgba(255, 255, 255, 0.8); /* Update 3: Increased opacity */
+    backdrop-filter: blur(5px);
     border-radius: 10px;
     padding: 20px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
 }
 
 .chart:hover {
     transform: translateY(-5px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 }
 
 /* Tab buttons styling */
@@ -186,28 +184,27 @@ main {
 .tab-btn {
     padding: 12px 24px;
     font-size: 16px;
-    background-color: rgba(236, 240, 241, 0.6);
-    backdrop-filter: blur(5px);
+    background-color: rgba(236, 240, 241, 0.8);
     border: none;
     cursor: pointer;
     transition: all 0.3s ease;
     border-radius: 25px;
     margin-right: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .tab-btn.active {
-    background-color: rgba(52, 152, 219, 0.8);
-    backdrop-filter: blur(5px);
+    background-color: rgba(52, 152, 219, 0.9);
     color: #fff;
 }
 
 .tab-content {
     display: none;
-    background-color: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(10px);
+    background-color: rgba(255, 255, 255, 0.8); /* Update 3: Increased opacity */
+    backdrop-filter: blur(5px);
     border-radius: 10px;
     padding: 20px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .tab-content.active {
@@ -225,14 +222,13 @@ table th,
 table td {
     padding: 12px;
     text-align: left;
-    background-color: rgba(248, 249, 250, 0.6);
-    backdrop-filter: blur(5px);
-    border-bottom: 2px solid rgba(236, 240, 241, 0.6);
+    background-color: rgba(255, 255, 255, 0.8); /* Update 3: Increased opacity */
+    border-bottom: 2px solid rgba(236, 240, 241, 0.8);
+    color: #000000; /* Update 2: Darker text color */
 }
 
 table th {
-    background-color: rgba(52, 152, 219, 0.8);
-    backdrop-filter: blur(5px);
+    background-color: rgba(52, 152, 219, 0.9);
     color: #fff;
 }
 
@@ -248,14 +244,13 @@ table th {
 #forecastTable td {
     padding: 12px;
     text-align: left;
-    background-color: rgba(248, 249, 250, 0.6);
-    backdrop-filter: blur(5px);
-    border-bottom: 2px solid rgba(236, 240, 241, 0.6);
+    background-color: rgba(255, 255, 255, 0.8); /* Update 3: Increased opacity */
+    border-bottom: 2px solid rgba(236, 240, 241, 0.8);
+    color: #000000; /* Update 2: Darker text color */
 }
 
 #forecastTable th {
-    background-color: rgba(52, 152, 219, 0.8);
-    backdrop-filter: blur(5px);
+    background-color: rgba(52, 152, 219, 0.9);
     color: #fff;
 }
 
@@ -271,16 +266,17 @@ table th {
     padding: 8px 16px;
     margin: 0 5px;
     cursor: pointer;
-    background-color: rgba(52, 152, 219, 0.8);
-    backdrop-filter: blur(5px);
+    background-color: rgba(52, 152, 219, 0.9);
     color: white;
     border: none;
     border-radius: 25px;
     transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .pagination-controls button:hover {
-    background-color: rgba(41, 128, 185, 0.9);
+    background-color: rgba(41, 128, 185, 1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 #currentPage {
@@ -296,9 +292,10 @@ table th {
     padding: 15px;
     border: none;
     border-radius: 10px;
-    background-color: rgba(248, 249, 250, 0.6);
-    backdrop-filter: blur(10px);
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: rgba(255, 255, 255, 0.8); /* Update 3: Increased opacity */
+    backdrop-filter: blur(5px);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1), 0 4px 15px rgba(0, 0, 0, 0.05);
+    color: #000000; /* Update 2: Darker text color */
 }
 
 /* Chat input styling */
@@ -313,9 +310,9 @@ table th {
     font-size: 16px;
     border: none;
     border-radius: 25px 0 0 25px;
-    background-color: rgba(240, 244, 248, 0.8);
-    backdrop-filter: blur(5px);
+    background-color: rgba(255, 255, 255, 0.8); /* Update 3: Increased opacity */
     transition: all 0.3s ease;
+    color: #000000; /* Update 2: Darker text color */
 }
 
 .chat-input input:focus {
@@ -326,17 +323,18 @@ table th {
 .chat-input button {
     padding: 12px 24px;
     font-size: 16px;
-    background-color: rgba(52, 152, 219, 0.8);
-    backdrop-filter: blur(5px);
+    background-color: rgba(52, 152, 219, 0.9);
     color: white;
     border: none;
     border-radius: 0 25px 25px 0;
     cursor: pointer;
     transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .chat-input button:hover {
-    background-color: rgba(41, 128, 185, 0.9);
+    background-color: rgba(41, 128, 185, 1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 /* Chatbot spacing */
