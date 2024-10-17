@@ -15,14 +15,20 @@
             <nav>
                 <ul>
                     <li><a href="index.html" data-page="dashboard">Dashboard</a></li>
-                    <li><a href="tables.html" class="active" data-page="tables">Tables</a></li>
+                    <li><a href="table.html" class="active" data-page="table">Tables</a></li>
                 </ul>
             </nav>
         </aside>
         <main>
-            <h2>5-Day Weather Forecast</h2>
+            <div class="search-bar">
+                <input type="text" id="cityInput" placeholder="Enter city name">
+                <button id="searchBtn">Get Weather</button>
+            </div>
+
+            <!-- 5-Day Forecast Table -->
             <div id="forecastTableContainer">
-                <div id="forecastTable"></div>
+                <h3>5-Day Temperature Forecast</h3>
+                <div id="forecastTable" class="tab-content active"></div>
                 <div id="paginationControls" class="pagination-controls">
                     <button id="prevPageBtn">Previous</button>
                     <span id="currentPage">1</span>
@@ -30,6 +36,7 @@
                 </div>
             </div>
 
+            <!-- Chatbot Section -->
             <div id="chatbot">
                 <div id="chatMessages" class="chat-messages"></div>
                 <div class="chat-input">

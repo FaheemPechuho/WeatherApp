@@ -6,9 +6,13 @@
 }
 
 body {
-    font-family: 'Arial', sans-serif;
+    font-family: 'Roboto', 'Arial', sans-serif;
     line-height: 1.6;
-    background-color: #f4f4f4;
+    background-image: url('https://images.unsplash.com/photo-1534088568595-a066f410bcda?auto=format&fit=crop&w=1920&q=80');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    color: #2c3e50;
 }
 
 /* Main container for layout */
@@ -20,7 +24,8 @@ body {
 /* Sidebar styling */
 .sidebar {
     width: 250px;
-    background-color: #333;
+    background: rgba(58, 28, 113, 0.7);
+    backdrop-filter: blur(10px);
     color: #fff;
     padding: 20px;
     position: relative;
@@ -30,6 +35,7 @@ body {
     font-size: 24px;
     margin-bottom: 20px;
     text-align: center;
+    font-weight: 700;
 }
 
 nav ul {
@@ -46,13 +52,13 @@ nav ul li a {
     display: block;
     padding: 10px;
     border-radius: 5px;
-    transition: background-color 0.3s, color 0.3s;
+    transition: all 0.3s ease;
 }
 
 nav ul li a:hover,
 nav ul li a.active {
-    background-color: #555;
-    color: #ffdd57; /* Highlight color on hover */
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: translateX(5px);
 }
 
 /* Main content area styling */
@@ -60,7 +66,8 @@ main {
     flex: 1;
     padding: 20px;
     overflow-y: auto;
-    background-color: #fff; /* Added background for main area */
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
 }
 
 /* Search bar styling */
@@ -71,37 +78,41 @@ main {
 
 .search-bar input {
     flex: 1;
-    padding: 10px;
+    padding: 12px;
     font-size: 16px;
-    border: 1px solid #ddd;
-    border-radius: 5px 0 0 5px;
-    transition: border-color 0.3s;
+    border: none;
+    border-radius: 25px 0 0 25px;
+    background-color: rgba(240, 244, 248, 0.8);
+    backdrop-filter: blur(5px);
+    transition: all 0.3s ease;
 }
 
 .search-bar input:focus {
-    border-color: #4CAF50; /* Green border on focus */
+    outline: none;
+    box-shadow: 0 0 0 2px #3498db;
 }
 
 .search-bar button {
-    padding: 10px 20px;
+    padding: 12px 24px;
     font-size: 16px;
-    background-color: #4CAF50;
+    background-color: rgba(52, 152, 219, 0.8);
+    backdrop-filter: blur(5px);
     color: white;
     border: none;
-    border-radius: 0 5px 5px 0;
+    border-radius: 0 25px 25px 0;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: all 0.3s ease;
 }
 
 .search-bar button:hover {
-    background-color: #45a049; /* Darker green on hover */
+    background-color: rgba(41, 128, 185, 0.9);
 }
 
 /* Unit toggle styling */
 .unit-toggle {
     display: flex;
     align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
 }
 
 .unit-toggle input {
@@ -112,22 +123,33 @@ main {
 #loading-spinner {
     text-align: center;
     margin: 20px 0;
-    display: none; /* Hide initially */
+    display: none;
 }
 
 /* Error message styling */
 .error {
-    color: red;
-    margin-bottom: 10px;
+    color: #e74c3c;
+    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: rgba(250, 219, 216, 0.8);
+    backdrop-filter: blur(5px);
 }
 
 /* Weather widget styling */
 .weather-widget {
-    background-color: #fff;
-    border-radius: 5px;
+    background-color: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    border-radius: 10px;
     padding: 20px;
     margin-bottom: 20px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.weather-widget:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
 /* Charts container styling */
@@ -142,10 +164,17 @@ main {
 .chart {
     flex: 1 1 calc(33.333% - 20px);
     min-width: 300px;
-    background-color: #fff;
-    border-radius: 5px;
+    background-color: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    border-radius: 10px;
     padding: 20px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.chart:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
 /* Tab buttons styling */
@@ -155,26 +184,30 @@ main {
 }
 
 .tab-btn {
-    padding: 10px 20px;
+    padding: 12px 24px;
     font-size: 16px;
-    background-color: #f1f1f1;
+    background-color: rgba(236, 240, 241, 0.6);
+    backdrop-filter: blur(5px);
     border: none;
     cursor: pointer;
-    transition: background-color 0.3s, color 0.3s;
-    border-radius: 5px;
+    transition: all 0.3s ease;
+    border-radius: 25px;
+    margin-right: 10px;
 }
 
 .tab-btn.active {
-    background-color: #ddd;
-    color: #333; /* Dark text for active tab */
+    background-color: rgba(52, 152, 219, 0.8);
+    backdrop-filter: blur(5px);
+    color: #fff;
 }
 
 .tab-content {
     display: none;
-    background-color: #fff;
-    border-radius: 5px;
+    background-color: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    border-radius: 10px;
     padding: 20px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .tab-content.active {
@@ -184,28 +217,46 @@ main {
 /* Table styling */
 table {
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0 10px;
 }
 
 table th,
 table td {
-    padding: 10px;
+    padding: 12px;
     text-align: left;
-    border-bottom: 1px solid #ddd;
+    background-color: rgba(248, 249, 250, 0.6);
+    backdrop-filter: blur(5px);
+    border-bottom: 2px solid rgba(236, 240, 241, 0.6);
+}
+
+table th {
+    background-color: rgba(52, 152, 219, 0.8);
+    backdrop-filter: blur(5px);
+    color: #fff;
 }
 
 /* Forecast table styling */
 #forecastTable {
     width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px; /* Add margin above the table */
+    border-collapse: separate;
+    border-spacing: 0 10px;
+    margin-top: 20px;
 }
 
 #forecastTable th,
 #forecastTable td {
-    padding: 10px;
+    padding: 12px;
     text-align: left;
-    border-bottom: 1px solid #ddd;
+    background-color: rgba(248, 249, 250, 0.6);
+    backdrop-filter: blur(5px);
+    border-bottom: 2px solid rgba(236, 240, 241, 0.6);
+}
+
+#forecastTable th {
+    background-color: rgba(52, 152, 219, 0.8);
+    backdrop-filter: blur(5px);
+    color: #fff;
 }
 
 /* Pagination controls styling */
@@ -217,73 +268,80 @@ table td {
 }
 
 .pagination-controls button {
-    padding: 5px 10px;
+    padding: 8px 16px;
     margin: 0 5px;
     cursor: pointer;
-    background-color: #4CAF50;
+    background-color: rgba(52, 152, 219, 0.8);
+    backdrop-filter: blur(5px);
     color: white;
     border: none;
-    border-radius: 5px;
-    transition: background-color 0.3s;
+    border-radius: 25px;
+    transition: all 0.3s ease;
 }
 
 .pagination-controls button:hover {
-    background-color: #45a049; /* Darker green on hover */
+    background-color: rgba(41, 128, 185, 0.9);
 }
 
 #currentPage {
-    margin: 0 10px; /* Space between buttons */
+    margin: 0 10px;
+    font-weight: bold;
 }
-
 
 /* Chat messages styling */
 .chat-messages {
     height: 300px;
     overflow-y: auto;
     margin-bottom: 10px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    background-color: #f9f9f9; /* Light background for chat */
+    padding: 15px;
+    border: none;
+    border-radius: 10px;
+    background-color: rgba(248, 249, 250, 0.6);
+    backdrop-filter: blur(10px);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* Chat input styling */
 .chat-input {
     display: flex;
-    margin-top: 10px; /* Added margin for spacing */
+    margin-top: 15px;
 }
 
 .chat-input input {
     flex: 1;
-    padding: 10px;
+    padding: 12px;
     font-size: 16px;
-    border: 1px solid #ddd;
-    border-radius: 5px 0 0 5px;
-    transition: border-color 0.3s;
+    border: none;
+    border-radius: 25px 0 0 25px;
+    background-color: rgba(240, 244, 248, 0.8);
+    backdrop-filter: blur(5px);
+    transition: all 0.3s ease;
 }
 
 .chat-input input:focus {
-    border-color: #4CAF50; /* Green border on focus */
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.8);
 }
 
 .chat-input button {
-    padding: 10px 20px;
+    padding: 12px 24px;
     font-size: 16px;
-    background-color: #4CAF50;
+    background-color: rgba(52, 152, 219, 0.8);
+    backdrop-filter: blur(5px);
     color: white;
     border: none;
-    border-radius: 0 5px 5px 0;
+    border-radius: 0 25px 25px 0;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: all 0.3s ease;
 }
 
 .chat-input button:hover {
-    background-color: #45a049; /* Darker green on hover */
+    background-color: rgba(41, 128, 185, 0.9);
 }
 
 /* Chatbot spacing */
 #chatbot {
-    margin-top: 20px; /* Added margin to separate from forecast */
+    margin-top: 30px;
 }
 
 /* Responsive design adjustments */
@@ -301,10 +359,11 @@ table td {
     }
 
     .tabs {
-        flex-direction: column; /* Stack tabs vertically on small screens */
+        flex-direction: column;
     }
 
     .tab-btn {
-        margin-bottom: 10px; /* Space between tab buttons */
+        margin-bottom: 10px;
+        width: 100%;
     }
 }
