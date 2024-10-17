@@ -23,6 +23,8 @@
             <div class="search-bar">
                 <input type="text" id="cityInput" placeholder="Enter city name">
                 <button id="searchBtn">Get Weather</button>
+                <div id="loading-spinner" style="display: none;">Loading...</div>
+                <div id="error" style="color: red;"></div>
             </div>
 
             <!-- 5-Day Forecast Table -->
@@ -38,7 +40,7 @@
 
             <!-- Chatbot Section -->
             <div id="chatbot">
-                <div id="chatMessages" class="chat-messages"></div>
+                <div id="chatMessages" class="chat-messages" style="border: 1px solid #ccc; height: 300px; overflow-y: scroll;"></div>
                 <div class="chat-input">
                     <input type="text" id="chatInput" placeholder="Ask about weather or anything else...">
                     <button id="sendChatBtn">Send</button>

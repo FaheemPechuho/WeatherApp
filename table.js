@@ -1,9 +1,7 @@
-const OPENWEATHER_API_KEY = '61f914574ac18c77533800b760147c1e'; // Replace with your actual OpenWeather API key
-const GEMINI_API_KEY = 'AIzaSyAxVIeE9zkWrV9-wV8O8qKh0MfkfkvI2VA'; // Replace with your Gemini API key
+const OPENWEATHER_API_KEY = '61f914574ac18c77533800b760147c1e';
+const GEMINI_API_KEY = 'AIzaSyAxVIeE9zkWrV9-wV8O8qKh0MfkfkvI2VA';
 
-let isCelsius = true;
 let forecastData = [];
-let weatherData; // Store current weather data
 let currentPage = 1;
 const itemsPerPage = 5;
 
@@ -15,132 +13,89 @@ const chatMessages = document.getElementById('chatMessages');
 const chatInput = document.getElementById('chatInput');
 const sendChatBtn = document.getElementById('sendChatBtn');
 const loadingSpinner = document.getElementById('loading-spinner');
+const errorDiv = document.getElementById('error');
 
 // Event listeners
-searchBtn.addEventListener('click', () => handleSearch(fetchWeatherByCity));
+searchBtn.addEventListener('click', searchWeather);
+cityInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') searchWeather();
+});
 sendChatBtn.addEventListener('click', handleChatSubmit);
 chatInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') handleChatSubmit();
 });
 
-// Toggle between Celsius and Fahrenheit
-function toggleUnitsAndFetchWeather() {
-    isCelsius = !isCelsius;
-    handleSearch(fetchWeatherByCity);
-}
-
-function formatTemperature(temp) {
-    return isCelsius ? `${Math.round(temp)}°C` : `${Math.round(temp * 9 / 5 + 32)}°F`;
-}
-
-// Fetch data from API
-async function fetchData(url) {
+// Search Weather Function
+async function searchWeather() {
     try {
-        const response = await fetch(url);
-        const data = await response.json();
-        if (!response.ok) throw new Error(data.message);
-        return data;
+        const city = cityInput.value.trim();
+        if (!city) {
+            throw new Error('Please enter a city name');
+        }
+
+        // Show loading state
+        searchBtn.disabled = true;
+        loadingSpinner.style.display = 'block';
+        errorDiv.textContent = '';
+
+        // Fetch and display weather data
+        const weatherData = await fetchCurrentWeather(city);
+        displayWeather(weatherData);
+
     } catch (error) {
-        displayError(error.message);
-        throw error;
+        console.error('Error:', error);
+        errorDiv.textContent = error.message || 'Failed to fetch weather data';
+        forecastTable.innerHTML = '<p>Failed to load weather data</p>';
+    } finally {
+        searchBtn.disabled = false;
+        loadingSpinner.style.display = 'none';
     }
 }
 
-// Fetch weather data by city name
-async function fetchWeatherByCity() {
-    const city = cityInput.value.trim();
-    if (!city) return displayError('City name is required.');
-
-    const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${OPENWEATHER_API_KEY}&units=metric`;
-
-    try {
-        weatherData = await fetchData(weatherUrl);
-        fetchForecast(weatherData.coord.lat, weatherData.coord.lon);
-    } catch (error) {
-        console.error('Error fetching weather:', error);
+// Fetch current weather
+async function fetchCurrentWeather(city) {
+    const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${OPENWEATHER_API_KEY}&units=metric`;
+    const response = await fetch(url);
+    const data = await response.json();
+    
+    if (!response.ok) {
+        throw new Error(data.message || 'City not found');
     }
+    
+    return data;
 }
 
-// Fetch 5-day forecast data
-async function fetchForecast(lat, lon) {
-    const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${OPENWEATHER_API_KEY}&units=metric`;
+// Display Weather Data
+function displayWeather(data) {
+    const date = new Date(data.dt * 1000);
+    const temp = Math.round(data.main.temp);
+    const description = data.weather[0].description;
 
-    try {
-        forecastData = await fetchData(forecastUrl);
-        displayForecast(forecastData);
-        updatePagination(); // Update pagination controls after fetching data
-    } catch (error) {
-        console.error('Error fetching forecast:', error);
-    }
-}
-
-// Display 5-day forecast
-function displayForecast(forecastData) {
-    const dailyData = forecastData.list.filter((item, index) => index % 8 === 0);
-    renderForecastTable(dailyData);
-}
-
-// Render the forecast table with pagination
-function renderForecastTable(dailyData) {
-    const start = (currentPage - 1) * itemsPerPage;
-    const end = start + itemsPerPage;
-    const paginatedData = dailyData.slice(start, end);
-
-    let tableHTML = `
-        <table>
+    const tableHTML = `
+        <table class="forecast-table">
             <thead>
                 <tr>
                     <th>Date</th>
+                    <th>City</th>
                     <th>Temperature</th>
                     <th>Weather</th>
                 </tr>
             </thead>
             <tbody>
+                <tr>
+                    <td>${date.toLocaleDateString()}</td>
+                    <td>${data.name}</td>
+                    <td>${temp}°C</td>
+                    <td>${description}</td>
+                </tr>
+            </tbody>
+        </table>
     `;
 
-    paginatedData.forEach(item => {
-        const temp = formatTemperature(item.main.temp);
-        tableHTML += `
-            <tr>
-                <td>${new Date(item.dt * 1000).toLocaleDateString()}</td>
-                <td>${temp}</td>
-                <td>${item.weather[0].description}</td>
-            </tr>
-        `;
-    });
-
-    tableHTML += '</tbody></table>';
     forecastTable.innerHTML = tableHTML;
 }
 
-// Update pagination controls
-function updatePagination() {
-    const totalPages = Math.ceil(forecastData.list.filter((item, index) => index % 8 === 0).length / itemsPerPage);
-    document.getElementById('currentPage').textContent = currentPage;
-
-    document.getElementById('prevPageBtn').disabled = currentPage === 1;
-    document.getElementById('nextPageBtn').disabled = currentPage === totalPages;
-
-    // Add event listeners for pagination buttons
-    document.getElementById('prevPageBtn').onclick = () => {
-        if (currentPage > 1) {
-            currentPage--;
-            renderForecastTable(forecastData.list.filter((item, index) => index % 8 === 0));
-            updatePagination();
-        }
-    };
-
-    document.getElementById('nextPageBtn').onclick = () => {
-        const totalPages = Math.ceil(forecastData.list.filter((item, index) => index % 8 === 0).length / itemsPerPage);
-        if (currentPage < totalPages) {
-            currentPage++;
-            renderForecastTable(forecastData.list.filter((item, index) => index % 8 === 0));
-            updatePagination();
-        }
-    };
-}
-
-// Chatbot interaction
+// Chatbot functions
 async function handleChatSubmit() {
     const message = chatInput.value.trim();
     if (!message) return;
@@ -149,76 +104,68 @@ async function handleChatSubmit() {
     chatInput.value = '';
 
     try {
-        let response;
         if (message.toLowerCase().includes('weather') || message.toLowerCase().includes('temperature')) {
             const city = extractCityFromMessage(message);
             if (city) {
-                const locationData = await fetchLocationData(city);
-                if (locationData) {
-                    await fetchForecast(locationData.lat, locationData.lon);
-                    response = generateWeatherResponse();
-                } else {
-                    response = "Sorry, I couldn't find the weather for that city.";
-                }
+                const weatherResponse = await getChatWeatherResponse(city);
+                appendMessage('assistant', weatherResponse);
             } else {
-                response = "Please provide a valid city name.";
+                appendMessage('assistant', "I couldn't determine which city you're asking about. Please specify a city name.");
             }
         } else {
-            response = await fetchGeminiResponse(message);
+            const response = await fetchGeminiResponse(message);
+            appendMessage('assistant', response);
         }
-        appendMessage('assistant', response);
     } catch (error) {
         appendMessage('assistant', 'Sorry, I encountered an error. Please try again.');
     }
 }
 
-// Extract city from user's message
-function extractCityFromMessage(message) {
-    const city = message.replace(/weather in |what is the weather in |temperature in /i, '').trim();
-    return city;
-}
-
-// Generate weather response
-function generateWeatherResponse() {
-    if (!weatherData) return "I'm sorry, I don't have any weather data at the moment.";
-
-    const { main, weather } = weatherData;
-    return `The current weather in ${weatherData.name} is ${weather[0].description} with a temperature of ${main.temp.toFixed(1)}°C.`;
-}
-
-// Fetch response from Gemini API
-async function fetchGeminiResponse(query) {
-    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${GEMINI_API_KEY}`; 
-
-    const payload = {
-        contents: [
-            {
-                parts: [
-                    { text: query } 
-                ]
-            }
-        ]
-    };
-
+async function getChatWeatherResponse(city) {
     try {
-        const response = await fetch(geminiUrl, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(payload),
-        });
+        const weatherData = await fetchCurrentWeather(city);
+        const currentTemp = weatherData.main.temp;
+        const description = weatherData.weather[0].description;
 
-        const data = await response.json();
-        if (!response.ok) throw new Error(data.message);
-        return data.contents[0].parts[0].text; // Adjust based on Gemini's response structure
+        return `Current weather in ${weatherData.name}:
+• Temperature: ${Math.round(currentTemp)}°C
+• Conditions: ${description}`;
     } catch (error) {
-        console.error('Error fetching from Gemini API:', error);
-        return "Sorry, I'm unable to process that query.";
+        return `I'm sorry, I couldn't find weather information for ${city}. Please check the city name and try again.`;
     }
 }
 
-// Append message to chat
+function extractCityFromMessage(message) {
+    const matches = message.match(/weather(?:\s+in)?\s+([a-zA-Z\s]+)|(?:what's|what is|how's|how is)\s+the\s+weather\s+(?:like\s+)?(?:in\s+)?([a-zA-Z\s]+)/i);
+    if (matches) {
+        return (matches[1] || matches[2]).trim();
+    }
+    const cityMatch = message.match(/in\s+([a-zA-Z\s]+)$/i);
+    return cityMatch ? cityMatch[1].trim() : null;
+}
+
+async function fetchGeminiResponse(query) {
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${GEMINI_API_KEY}`;
+    
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                contents: [{ parts: [{ text: query }] }]
+            })
+        });
+        
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.message);
+        return data.contents[0].parts[0].text;
+    } catch (error) {
+        console.error('Error fetching from Gemini API:', error);
+        return "I'm sorry, I couldn't process that query right now. Please try again.";
+    }
+}
+
+// Helper functions
 function appendMessage(role, content) {
     const messageDiv = document.createElement('div');
     messageDiv.classList.add('message', role);
@@ -227,34 +174,10 @@ function appendMessage(role, content) {
     chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
-// Display error messages
-function displayError(message) {
-    errorDiv.textContent = message;
-}
-
-// Handle search with loading state
-async function handleSearch(action) {
-    searchBtn.disabled = true;
-    loadingSpinner.style.display = 'block';
-    forecastTable.innerHTML = '';
-
-    await action();
-
-    searchBtn.disabled = false;
-    loadingSpinner.style.display = 'none';
-}
-
-// Fetch location data (latitude and longitude) based on city name
-async function fetchLocationData(city) {
-    const geocodingUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${OPENWEATHER_API_KEY}`;
-    try {
-        const locationData = await fetchData(geocodingUrl);
-        return { lat: locationData.coord.lat, lon: locationData.coord.lon };
-    } catch (error) {
-        console.error('Error fetching location data:', error);
-        return null;
+// Initial load
+window.addEventListener('load', () => {
+    if (!cityInput.value) {
+        cityInput.value = 'London';
+        searchWeather();
     }
-}
-
-// Fetch and show forecast data for London as default
-fetchForecast(51.5074, -0.1278); // Coordinates of London
+});
