@@ -40,7 +40,9 @@ async function searchWeather() {
 
         // Fetch and display weather data
         const weatherData = await fetchCurrentWeather(city);
+        const forecastData = await fetchForecast(city);
         displayWeather(weatherData);
+        displayForecast(forecastData);
 
     } catch (error) {
         console.error('Error:', error);
@@ -65,6 +67,19 @@ async function fetchCurrentWeather(city) {
     return data;
 }
 
+// Fetch 5-day weather forecast
+async function fetchForecast(city) {
+    const url = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${OPENWEATHER_API_KEY}&units=metric`;
+    const response = await fetch(url);
+    const data = await response.json();
+
+    if (!response.ok) {
+        throw new Error(data.message || 'Could not fetch forecast data');
+    }
+
+    return data;
+}
+
 // Display Weather Data
 function displayWeather(data) {
     const date = new Date(data.dt * 1000);
@@ -83,7 +98,7 @@ function displayWeather(data) {
             </thead>
             <tbody>
                 <tr>
-                    <td>${date.toLocaleDateString()}</td>
+                    <td>${'Current'}</td>
                     <td>${data.name}</td>
                     <td>${temp}°C</td>
                     <td>${description}</td>
@@ -93,6 +108,48 @@ function displayWeather(data) {
     `;
 
     forecastTable.innerHTML = tableHTML;
+}
+
+// Display 5-Day Forecast Data
+function displayForecast(data) {
+    const days = {};
+    
+    // Group forecast data by date
+    data.list.forEach(entry => {
+        const date = new Date(entry.dt * 1000).toLocaleDateString();
+        if (!days[date]) {
+            days[date] = {
+                temp: Math.round(entry.main.temp),
+                description: entry.weather[0].description
+            };
+        }
+    });
+
+    const forecastHTML = `
+        <h3>5-Day Weather Forecast</h3>
+        <table class="forecast-table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Temperature</th>
+                    <th>Weather</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${Object.entries(days).map(([date, { temp, description }]) => {
+                    return `
+                        <tr>
+                            <td>${date}</td>
+                            <td>${temp}°C</td>
+                            <td>${description}</td>
+                        </tr>
+                    `;
+                }).join('')}
+            </tbody>
+        </table>
+    `;
+
+    forecastTable.innerHTML += forecastHTML; // Append forecast to existing weather table
 }
 
 // Chatbot functions
